@@ -15,6 +15,7 @@ class Quiz(tk.Frame):
     def __init__(self, root):
         super().__init__()
         self.root = root
+        self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.root.bind("<Return>", self.check_answer)
         self.image_categories = []
         self.category_weights = []
@@ -40,6 +41,12 @@ class Quiz(tk.Frame):
         self.build_answer_panel()
         self.pack()
         self.choose_next_question()
+
+    def on_closing(self):
+        for item, score in zip(self.image_categories, self.category_weights):
+            with open('./' + item + '/score.txt', 'w') as file:
+                file.write(str(score))
+        root.destroy()
 
     def load_images(self):
         path = './default_image/default_image.png'
